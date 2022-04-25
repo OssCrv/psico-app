@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,6 +29,6 @@ public class Building {
     @Column(name = "buildings_name", length = 100)
     private String buildingsName;
 
-    @OneToMany(mappedBy = "fkBuilding")
-    private Set<Facility> facilities = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "building")
+    private List<Facility> facilities;
 }

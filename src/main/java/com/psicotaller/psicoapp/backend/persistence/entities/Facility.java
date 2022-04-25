@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "facilities")
@@ -18,9 +19,12 @@ public class Facility {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_building")
-    private Building fkBuilding;
+    @JoinColumn(name = "building")
+    private Building building;
 
     @Column(name = "room_number")
     private String roomNumber;
+
+    @OneToMany(mappedBy = "facility")
+    private List<Reservation> reservations;
 }

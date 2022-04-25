@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -51,4 +52,7 @@ public class UserApp {
     @Lob
     @Column(name = "rol", nullable = false)
     private String rol;
+
+    @OneToMany(mappedBy = "psicologo")
+    private List<Reservation> reservations;
 }
