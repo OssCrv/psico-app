@@ -1,6 +1,6 @@
 package com.psicotaller.psicoapp.backend.persistence.jpa;
 
-import com.psicotaller.psicoapp.backend.persistence.entities.UserApp;
+import com.psicotaller.psicoapp.backend.persistence.UserApp;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

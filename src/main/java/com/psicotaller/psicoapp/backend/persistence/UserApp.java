@@ -1,5 +1,6 @@
-package com.psicotaller.psicoapp.backend.persistence.entities;
+package com.psicotaller.psicoapp.backend.persistence;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,5 +55,6 @@ public class UserApp {
     private String rol;
 
     @OneToMany(mappedBy = "psicologo")
+    @JsonManagedReference
     private List<Reservation> reservations;
 }

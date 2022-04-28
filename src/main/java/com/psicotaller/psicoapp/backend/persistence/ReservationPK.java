@@ -1,4 +1,4 @@
-package com.psicotaller.psicoapp.backend.persistence.entities;
+package com.psicotaller.psicoapp.backend.persistence;
 
 import lombok.Data;
 

@@ -1,5 +1,7 @@
-package com.psicotaller.psicoapp.backend.persistence.entities;
+package com.psicotaller.psicoapp.backend.persistence;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,12 +21,14 @@ public class Facility {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "building")
+    @JoinColumn(name = "fk_building")
+    @JsonBackReference
     private Building building;
 
     @Column(name = "room_number")
     private String roomNumber;
 
     @OneToMany(mappedBy = "facility")
+    @JsonManagedReference
     private List<Reservation> reservations;
 }
