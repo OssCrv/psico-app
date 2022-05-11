@@ -1,4 +1,4 @@
-package com.psicotaller.psicoapp.backend.domain;
+package com.psicotaller.psicoapp.backend.domain.impl;
 
 import com.psicotaller.psicoapp.backend.persistence.Role;
 import com.psicotaller.psicoapp.backend.persistence.UserApp;
@@ -19,13 +19,13 @@ import java.util.Set;
 import static com.psicotaller.psicoapp.backend.persistence.Role.ADMIN;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
-public class UserAppService implements UserDetailsService {
+public class UserAppServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserAppJpaRepository userAppJpaRepository;
 
     public UserApp getByUsername(String usernameApp){
-        log.info("Probando el logger");
+        log.info("Encontrando ", usernameApp);
         return userAppJpaRepository.findByUsername(usernameApp).orElse(new UserApp());
     }
 
@@ -34,7 +34,7 @@ public class UserAppService implements UserDetailsService {
         Optional<User> user = Optional.empty();
         Optional<UserApp> userApp =  userAppJpaRepository.findByUsername(username);
 
-        log.info("Cargando usuario");
+        log.info("Cargando usuario", username);
         if(userApp.isPresent()){
             user = userApp.map(
                     userApp1 ->

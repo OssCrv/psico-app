@@ -1,6 +1,6 @@
 package com.psicotaller.psicoapp.backend.web.security.jwt;
 
-import com.psicotaller.psicoapp.backend.domain.UserAppService;
+import com.psicotaller.psicoapp.backend.domain.impl.UserAppServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +22,7 @@ public class JwtFilterRequest extends OncePerRequestFilter {
     private JwtManager jwtManager;
 
     @Autowired
-    private UserAppService userService;
+    private UserAppServiceImpl userService;
 
     @Override
     protected void doFilterInternal(

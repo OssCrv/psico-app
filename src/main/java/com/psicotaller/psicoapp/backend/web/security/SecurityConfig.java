@@ -1,6 +1,6 @@
 package com.psicotaller.psicoapp.backend.web.security;
 
-import com.psicotaller.psicoapp.backend.domain.UserAppService;
+import com.psicotaller.psicoapp.backend.domain.impl.UserAppServiceImpl;
 import com.psicotaller.psicoapp.backend.web.security.jwt.JwtFilterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private final UserAppService userDetailsService;
+    private final UserAppServiceImpl userDetailsService;
 
     @Autowired
     private final PasswordEncoder passwordEncoder;

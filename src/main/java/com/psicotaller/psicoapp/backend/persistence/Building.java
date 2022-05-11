@@ -1,19 +1,16 @@
 package com.psicotaller.psicoapp.backend.persistence;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "buildings")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
 public class Building {
     @Id
@@ -31,6 +28,6 @@ public class Building {
     private String buildingsName;
 
     @OneToMany(mappedBy = "building")
-    @JsonManagedReference
-    private List<Facility> facilities;
+    @JsonIgnoreProperties(value = { "reservations", "building"}, allowSetters = true)
+    private Set<Facility> facilities = new HashSet<>();
 }
