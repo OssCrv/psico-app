@@ -7,9 +7,9 @@ import java.io.Serializable;
 
 @Data
 @ToString
-public class BuildingDto implements Serializable {
+public class FacilityDto implements Serializable {
     private Integer id;
-    private String ownersName;
-    private String buildingsAddress;
-    private String buildingsName;
+    private Integer fkBuilding;
+    private BuildingDto buildingDto;
+    private String roomNumber;
 }

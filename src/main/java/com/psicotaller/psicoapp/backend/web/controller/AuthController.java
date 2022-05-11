@@ -1,6 +1,6 @@
 package com.psicotaller.psicoapp.backend.web.controller;
 
-import com.psicotaller.psicoapp.backend.domain.UserAppService;
+import com.psicotaller.psicoapp.backend.domain.impl.UserAppServiceImpl;
 import com.psicotaller.psicoapp.backend.domain.dto.AuthenticationRequest;
 import com.psicotaller.psicoapp.backend.domain.dto.AuthenticationResponse;
 import com.psicotaller.psicoapp.backend.web.security.jwt.JwtManager;
@@ -22,7 +22,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserAppService userService;
+    private UserAppServiceImpl userService;
 
     @Autowired
     private JwtManager jwtUtil;
