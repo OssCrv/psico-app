@@ -64,7 +64,7 @@ public class BuildingServiceImpl implements BuildingService {
     @Override
     @Transactional(readOnly = true)
     public BuildingDto findOne(Integer id) {
-        log.debug("Request to get Buildings : {}", id);
+        log.debug("Request to get Building : {}", id);
         return jpaRepository.findById(id).map(mapper::toDto)
                 .orElseThrow( () ->
                         new ResourceNotFoundException("Building", "id", id.toString())

@@ -1,6 +1,6 @@
 package com.psicotaller.psicoapp.backend.web.controller;
 
-import com.psicotaller.psicoapp.backend.domain.impl.BuildingServiceImpl;
+import com.psicotaller.psicoapp.backend.domain.BuildingService;
 import com.psicotaller.psicoapp.backend.domain.dto.BuildingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import java.util.List;
 public class BuildingController {
 
     @Autowired
-    private BuildingServiceImpl service;
+    private BuildingService service;
 
     @GetMapping("/buildings")
     public List<BuildingDto> getBuildings(){
@@ -38,6 +38,4 @@ public class BuildingController {
     public Boolean delete(@PathVariable Integer buildingId){
         return service.delete(buildingId);
     }
-
-
 }
