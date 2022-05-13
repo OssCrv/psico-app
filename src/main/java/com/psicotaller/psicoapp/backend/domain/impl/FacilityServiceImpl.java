@@ -1,9 +1,9 @@
 package com.psicotaller.psicoapp.backend.domain.impl;
 
+import com.psicotaller.psicoapp.backend.domain.FacilityService;
 import com.psicotaller.psicoapp.backend.domain.dto.FacilityDto;
 import com.psicotaller.psicoapp.backend.domain.exception.ResourceNotFoundException;
 import com.psicotaller.psicoapp.backend.domain.mapper.FacilityMapper;
-import com.psicotaller.psicoapp.backend.persistence.Building;
 import com.psicotaller.psicoapp.backend.persistence.Facility;
 import com.psicotaller.psicoapp.backend.persistence.jpa.BuildingJpaRepository;
 import com.psicotaller.psicoapp.backend.persistence.jpa.FacilityJpaRepository;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
-public class FacilityServiceImpl {
+public class FacilityServiceImpl implements FacilityService {
 
     @Autowired
     private FacilityJpaRepository jpaRepository;
@@ -27,10 +27,42 @@ public class FacilityServiceImpl {
     @Autowired
     private BuildingJpaRepository buildingRepository;
 
-    public List<FacilityDto> findAll() {return mapper.toDto(jpaRepository.findAll());}
+    @Override
+    public FacilityDto save(FacilityDto dto){
+        log.info("Request to save Facility : {}", dto);
+        Facility facility = mapper.toEntity(dto);
+        facility = jpaRepository.save(facility);
+        return mapper.toDto(facility);
+    }
 
-    public FacilityDto findById(Integer id){
-        log.info("Cuarto encontrado");
+    @Override
+    public FacilityDto partialUpdate(FacilityDto dto){
+        log.info("Request to partially update Facility : {}", dto);
+        Integer id = dto.getId();
+        return jpaRepository
+                .findById(id)
+                .map(existing -> {
+                    mapper.partialUpdate(existing, dto);
+                    return existing;
+                })
+                .map(jpaRepository::save)
+                .map(mapper::toDto)
+                .orElseThrow( () ->
+                        new ResourceNotFoundException("Facility", "id", id.toString())
+                );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FacilityDto> findAll() {
+        log.debug("Request to get all Facilities");
+        return mapper.toDto(jpaRepository.findAll());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FacilityDto findOne(Integer id){
+        log.debug("Request to get Facility : {}", id);
         return mapper.toDto(
                 jpaRepository.findById(id)
                         .orElseThrow(
@@ -39,23 +71,14 @@ public class FacilityServiceImpl {
         );
     }
 
-    public FacilityDto save(FacilityDto dto){
-        log.info(dto.toString());
-        Facility facility = jpaRepository.save(mapper.toEntity(dto));
-        log.info(facility.toString());
-        log.info("Localización guardada");
-        return mapper.toDto(facility);
-    }
-
-    public void delete(Integer id){
+    @Override
+    public Boolean delete(Integer id){
         log.info("Cuarto eliminado");
-        jpaRepository.deleteById(id);
-    }
-
-    public void updateFacility(FacilityDto dto){
-        Facility facility = jpaRepository.findById(dto.getId())
-                .orElseThrow( () ->
-                        new ResourceNotFoundException("Facility", "Id", dto.getId().toString())
-                );
+        return jpaRepository.findById(id)
+                .map(building -> {
+                    jpaRepository.deleteById(id);
+                    return true;
+                })
+                .orElse(false);
     }
 }
