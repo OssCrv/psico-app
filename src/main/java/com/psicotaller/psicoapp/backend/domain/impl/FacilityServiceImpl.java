@@ -5,7 +5,6 @@ import com.psicotaller.psicoapp.backend.domain.dto.FacilityDto;
 import com.psicotaller.psicoapp.backend.domain.exception.ResourceNotFoundException;
 import com.psicotaller.psicoapp.backend.domain.mapper.FacilityMapper;
 import com.psicotaller.psicoapp.backend.persistence.Facility;
-import com.psicotaller.psicoapp.backend.persistence.jpa.BuildingJpaRepository;
 import com.psicotaller.psicoapp.backend.persistence.jpa.FacilityJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +22,6 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Autowired
     private FacilityMapper mapper;
-
-    @Autowired
-    private BuildingJpaRepository buildingRepository;
 
     @Override
     public FacilityDto save(FacilityDto dto){

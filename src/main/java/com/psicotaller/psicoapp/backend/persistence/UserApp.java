@@ -54,7 +54,7 @@ public class UserApp {
     @Column(name = "rol", nullable = false)
     private String rol;
 
-    @OneToMany(mappedBy = "psicologo")
+    @OneToMany(mappedBy = "therapist")
     @JsonManagedReference
     private List<Reservation> reservations;
 }
