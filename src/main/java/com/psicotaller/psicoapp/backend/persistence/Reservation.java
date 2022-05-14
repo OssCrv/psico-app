@@ -16,8 +16,15 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Reservation {
-    @EmbeddedId
-    private ReservationPK id;
+    @Id
+    @Column(name = "id_reservation")
+    private Integer id;
+
+    @Column(name = "fk_facility")
+    private Integer fkFacility;
+
+    @Column(name = "fk_therapist")
+    private Integer fkTherapist;
 
     @Column(name = "reservation_date")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -36,8 +43,8 @@ public class Reservation {
     private Facility facility;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("fkPsicologo")
-    @JoinColumn(name = "fk_psicologo", nullable = false)
+    @MapsId("fkTherapist")
+    @JoinColumn(name = "fk_therapist", nullable = false)
     @JsonBackReference
-    private UserApp psicologo;
+    private UserApp therapist;
 }

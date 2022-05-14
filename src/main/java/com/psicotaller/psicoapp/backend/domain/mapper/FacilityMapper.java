@@ -9,11 +9,6 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {BuildingMapper.class})
 public interface FacilityMapper extends EntityMapper<FacilityDto, Facility>{
 
-    @Mapping(target = "buildingDto"/*buildingDto*/,
-            source = "building", qualifiedByName = "buildingId")
-    @Override
-    FacilityDto toDto(Facility facility);
-
     @Override
     @Mappings({
             @Mapping(target = "building", source = "buildingDto"),
@@ -21,6 +16,9 @@ public interface FacilityMapper extends EntityMapper<FacilityDto, Facility>{
     })
     Facility toEntity(FacilityDto dto);
 
-    @Named("buildingId")
-    BuildingDto toDtoBuildingId(Building building);
+    @Override
+    @Mapping(
+            target = "buildingDto", source = "building")
+    FacilityDto toDto(Facility facility);
+
 }
