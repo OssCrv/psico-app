@@ -17,7 +17,8 @@ import java.time.Instant;
 @NoArgsConstructor
 public class Reservation {
     @Id
-    @Column(name = "id_reservation")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_reservation", nullable = false)
     private Integer id;
 
     @Column(name = "fk_facility")
@@ -30,10 +31,10 @@ public class Reservation {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date reservationDate;
 
-    @Column(name = "date_creation", nullable = false)
+    @Column(name = "date_creation")
     private Instant dateCreation;
 
-    @Column(name = "last_update", nullable = false)
+    @Column(name = "last_update")
     private Instant lastUpdate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
