@@ -13,10 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
-
-import static com.psicotaller.psicoapp.backend.persistence.Role.ADMIN;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserAppServiceImpl implements UserDetailsService {
@@ -41,7 +40,7 @@ public class UserAppServiceImpl implements UserDetailsService {
                             new User(
                                     userApp1.getUsername(),
                                     userApp1.getPass(),
-                                    Set.of(new Role(ADMIN)))
+                                    Set.of(mapRol(userApp1.getRol())))
             );
         }
 
@@ -52,5 +51,22 @@ public class UserAppServiceImpl implements UserDetailsService {
                         )
                 )
         );
+    }
+
+    private Role mapRol(String rol) {
+        if (rol == null) {
+            throw new IllegalArgumentException("El rol del usuario no puede ser nulo");
+        }
+
+        String normalizedRole = rol.trim().toUpperCase(Locale.ROOT);
+        switch (normalizedRole) {
+            case Role.ADMIN:
+            case Role.USUARIO:
+            case Role.TERAPEUTA:
+            case Role.PACIENTE:
+                return new Role(normalizedRole);
+            default:
+                throw new IllegalArgumentException("Rol desconocido: " + rol);
+        }
     }
 }

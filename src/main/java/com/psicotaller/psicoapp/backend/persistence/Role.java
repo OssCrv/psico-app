@@ -8,7 +8,7 @@ public class Role implements GrantedAuthority {
 
     public static final String ADMIN = "ADMIN";
     public static final String USUARIO = "USUARIO";
-    public static final String PSICOLOGO = "PSICOLOGO";
+    public static final String TERAPEUTA = "TERAPEUTA";
     public static final String PACIENTE = "PACIENTE";
 
     private final String role;
