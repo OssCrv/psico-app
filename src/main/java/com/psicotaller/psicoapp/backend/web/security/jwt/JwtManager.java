@@ -1,15 +1,18 @@
 package com.psicotaller.psicoapp.backend.web.security.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -19,7 +22,13 @@ public class JwtManager {
     private Jwt jwt;
 
     public String generateToken(UserDetails userDetails) {
-        return Jwts
+        Optional<String> role = userDetails
+                .getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst();
+
+        JwtBuilder builder = Jwts
                 .builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
@@ -27,7 +36,11 @@ public class JwtManager {
                         java.sql.Date.valueOf(
                                 LocalDate.now().plusDays(jwt.getTokenExpirationAfterDays())
                         )
-                )
+                );
+
+        role.ifPresent(value -> builder.claim("role", value));
+
+        return builder
                 .signWith(SignatureAlgorithm.HS256, jwt.getSecretKey())
                 .compact();
     }
@@ -53,6 +66,10 @@ public class JwtManager {
                 .setSigningKey(jwt.getSecretKey())
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public String extractRole(String token) {
+        return getClaims(token).get("role", String.class);
     }
 }
 

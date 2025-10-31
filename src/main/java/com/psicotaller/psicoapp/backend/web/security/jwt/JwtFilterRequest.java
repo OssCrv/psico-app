@@ -3,6 +3,7 @@ package com.psicotaller.psicoapp.backend.web.security.jwt;
 import com.psicotaller.psicoapp.backend.domain.impl.UserAppServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -14,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class JwtFilterRequest extends OncePerRequestFilter {
@@ -43,10 +45,13 @@ public class JwtFilterRequest extends OncePerRequestFilter {
                 UserDetails user = userService.loadUserByUsername(username);
 
                 if (jwtManager.validateToken(jwt, user)) {
+                    String role = jwtManager.extractRole(jwt);
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             user,
                             null,
-                            user.getAuthorities()
+                            role != null && !role.isEmpty()
+                                    ? Collections.singletonList(new SimpleGrantedAuthority(role))
+                                    : user.getAuthorities()
                     );
                     authToken.setDetails(
                             new WebAuthenticationDetailsSource().buildDetails(request)
