@@ -1,5 +1,6 @@
 package com.psicotaller.psicoapp.backend.domain.impl;
 
+import com.psicotaller.psicoapp.backend.domain.mapper.UserMapper;
 import com.psicotaller.psicoapp.backend.persistence.Role;
 import com.psicotaller.psicoapp.backend.persistence.UserApp;
 import com.psicotaller.psicoapp.backend.persistence.jpa.UserAppJpaRepository;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -24,6 +26,12 @@ class UserAppServiceImplTest {
 
     @Mock
     private UserAppJpaRepository userAppJpaRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private UserMapper userMapper;
 
     @InjectMocks
     private UserAppServiceImpl userAppService;
