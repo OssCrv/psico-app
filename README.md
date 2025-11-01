@@ -59,9 +59,18 @@ Esto iniciará el servicio en el puerto y contexto definidos en las propiedades 
 | POST | `/api/v1/reservations` | Crea una nueva reserva. |
 | PUT | `/api/v1/reservations` | Actualiza parcialmente una reserva existente. |
 | DELETE | `/api/v1/reservations/{reservationId}` | Elimina una reserva. |
+| GET | `/api/v1/users` | Lista los usuarios con rol `USUARIO` (requiere autoridad `ADMIN`).【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L26-L34】 |
+| GET | `/api/v1/therapists` | Lista los usuarios con rol `TERAPEUTA` (requiere autoridad `ADMIN`).【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L35-L42】 |
+| GET | `/api/v1/admins` | Lista los usuarios con rol `ADMIN` (requiere autoridad `ADMIN`).【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L43-L50】 |
+| GET | `/api/v1/patients` | Lista los usuarios con rol `PACIENTE` (requiere autoridad `ADMIN`).【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L51-L58】 |
+| GET | `/api/v1/users/all` | Recupera todos los usuarios registrados sin filtro por rol (requiere autoridad `ADMIN`).【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L59-L66】 |
+| GET | `/api/v1/users/{id}` | Recupera un usuario por su identificador (requiere autoridad `ADMIN`).【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L67-L74】 |
+| POST | `/api/v1/users` | Crea un nuevo usuario con los datos indicados (requiere autoridad `ADMIN`).【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L75-L93】 |
+| PUT | `/api/v1/users/{id}` | Actualiza los datos de un usuario existente (requiere autoridad `ADMIN`).【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L94-L108】 |
+| DELETE | `/api/v1/users/{id}` | Elimina un usuario registrado (requiere autoridad `ADMIN`).【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L109-L118】 |
 | POST | `/api/auth/authenticate` | Obtiene un token JWT válido. |
 
-Consulta los controladores para conocer los detalles de implementación y respuesta de cada operación.【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/BuildingController.java†L10-L40】【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/FacilityController.java†L10-L39】【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/ReservationController.java†L10-L38】【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/AuthController.java†L16-L57】
+Consulta los controladores para conocer los detalles de implementación y respuesta de cada operación.【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/BuildingController.java†L10-L40】【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/FacilityController.java†L10-L39】【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/ReservationController.java†L10-L38】【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L18-L120】【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/AuthController.java†L16-L57】
 
 ### Cuerpos de solicitud de ejemplo
 Los cuerpos JSON siguientes reflejan los atributos de la base de datos y DTOs involucrados en cada recurso.
@@ -110,6 +119,26 @@ Los cuerpos JSON siguientes reflejan los atributos de la base de datos y DTOs in
   }
   ```
   - Devuelve un JWT que debe incluirse en la cabecera `Authorization: Bearer <token>` para invocar los endpoints protegidos. El cuerpo solicitado corresponde al DTO `AuthenticationRequest` utilizado por el controlador de autenticación.【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/AuthController.java†L28-L47】【F:src/main/java/com/psicotaller/psicoapp/backend/domain/dto/AuthenticationRequest.java†L1-L10】
+
+#### Users
+- **POST `/api/v1/users`**
+  ```json
+  {
+    "username": "Paciente",
+    "firstName": "User",
+    "lastName": " Usuario",
+    "docType": "CC",
+    "document": "1010101100",
+    "professionalCard": false,
+    "email": "paciente@prueba2.com",
+    "telephone": " (4) 389 93 84",
+    "isActive": true,
+    "password": "password",
+    "role": "PACIENTE"
+  }
+  ```
+  - El campo `role` acepta únicamente los valores `ADMIN`, `TERAPEUTA`, `PACIENTE` y `USUARIO`.【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L75-L103】【F:src/main/java/com/psicotaller/psicoapp/backend/persistence/Role.java†L8-L18】
+  - Todos los endpoints de usuarios requieren credenciales con autoridad `ADMIN` y devuelven/aceptan el DTO `UserDto`, con la excepción de la creación, que espera un `UserCreationRequest` como el mostrado arriba.【F:src/main/java/com/psicotaller/psicoapp/backend/web/controller/UserController.java†L26-L118】【F:src/main/java/com/psicotaller/psicoapp/backend/domain/dto/UserCreationRequest.java†L1-L26】
 
 ## Estructura del proyecto
 ```
