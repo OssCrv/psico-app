@@ -41,9 +41,14 @@ public class UserAppServiceImpl implements UserDetailsService {
 
     private final UserMapper userMapper;
 
+    @Transactional(readOnly = true)
     public UserApp getByUsername(String usernameApp){
         log.info("Encontrando {}", usernameApp);
-        return userAppJpaRepository.findByUsername(usernameApp).orElse(new UserApp());
+        return userAppJpaRepository
+                .findByUsername(usernameApp)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        String.format("Username %s not found", usernameApp)
+                ));
     }
 
     @Transactional(readOnly = true)

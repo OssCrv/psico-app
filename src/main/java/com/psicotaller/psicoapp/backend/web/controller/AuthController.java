@@ -1,8 +1,9 @@
 package com.psicotaller.psicoapp.backend.web.controller;
 
-import com.psicotaller.psicoapp.backend.domain.impl.UserAppServiceImpl;
 import com.psicotaller.psicoapp.backend.domain.dto.AuthenticationRequest;
 import com.psicotaller.psicoapp.backend.domain.dto.AuthenticationResponse;
+import com.psicotaller.psicoapp.backend.domain.impl.UserAppServiceImpl;
+import com.psicotaller.psicoapp.backend.persistence.UserApp;
 import com.psicotaller.psicoapp.backend.web.security.jwt.JwtManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,17 +43,11 @@ public class AuthController {
             UserDetails userDetails = userService.loadUserByUsername(
                     request.getUsername()
             );
-            String jwt = jwtUtil.generateToken(userDetails);
-            String role = userDetails
-                    .getAuthorities()
-                    .stream()
-                    .findFirst()
-                    .map(GrantedAuthority::getAuthority)
-                    .orElse(null);
+            UserApp user = userService.getByUsername(request.getUsername());
+            String jwt = jwtUtil.generateToken(userDetails, user.getRole().name());
 
-            return new ResponseEntity<>(
-                    new AuthenticationResponse(jwt, role),
-                    HttpStatus.OK
+            return ResponseEntity.ok(
+                    new AuthenticationResponse(jwt, user.getRole().name())
             );
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

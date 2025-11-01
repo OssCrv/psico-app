@@ -57,4 +57,12 @@ public class UserApp {
     @OneToMany(mappedBy = "therapist")
     @JsonManagedReference
     private List<Reservation> reservations;
+
+    public UserRole getRole() {
+        return UserRole.valueOf(this.rol);
+    }
+
+    public void setRole(UserRole role) {
+        this.rol = role != null ? role.name() : null;
+    }
 }

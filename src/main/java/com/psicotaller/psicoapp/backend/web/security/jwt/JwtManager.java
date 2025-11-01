@@ -1,18 +1,17 @@
 package com.psicotaller.psicoapp.backend.web.security.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @AllArgsConstructor
@@ -21,26 +20,22 @@ public class JwtManager {
     @Autowired
     private Jwt jwt;
 
-    public String generateToken(UserDetails userDetails) {
-        Optional<String> role = userDetails
-                .getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst();
+    public String generateToken(UserDetails userDetails, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        if (role != null) {
+            claims.put("role", role);
+        }
 
-        JwtBuilder builder = Jwts
+        return Jwts
                 .builder()
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(
                         java.sql.Date.valueOf(
                                 LocalDate.now().plusDays(jwt.getTokenExpirationAfterDays())
                         )
-                );
-
-        role.ifPresent(value -> builder.claim("role", value));
-
-        return builder
+                )
                 .signWith(SignatureAlgorithm.HS256, jwt.getSecretKey())
                 .compact();
     }
