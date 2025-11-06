@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -95,14 +96,32 @@ public class UserController {
      * @return Usuario creado sin exponer la contraseña.
      */
     @PostMapping("/users")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDto> createUser(@RequestBody UserCreationRequest request) {
-        try {
-            UserDto created = userService.createUser(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        } catch (IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
-        }
+        return createUserInternal(request);
+    }
+
+    /**
+     * Crea un nuevo terapeuta estableciendo automáticamente el rol correspondiente.
+     *
+     * @param request datos necesarios para la creación del terapeuta.
+     * @return Terapeuta creado sin exponer la contraseña.
+     */
+    @PostMapping("/therapists")
+    public ResponseEntity<UserDto> createTherapist(@RequestBody UserCreationRequest request) {
+        request.setRole(Role.TERAPEUTA);
+        return createUserInternal(request);
+    }
+
+    /**
+     * Crea un nuevo paciente estableciendo automáticamente el rol correspondiente.
+     *
+     * @param request datos necesarios para la creación del paciente.
+     * @return Paciente creado sin exponer la contraseña.
+     */
+    @PostMapping("/patients")
+    public ResponseEntity<UserDto> createPatient(@RequestBody UserCreationRequest request) {
+        request.setRole(Role.PACIENTE);
+        return createUserInternal(request);
     }
 
     /**
@@ -137,6 +156,18 @@ public class UserController {
     private List<UserDto> listByRole(String role) {
         try {
             return userService.listByRol(role);
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+    }
+
+    private ResponseEntity<UserDto> createUserInternal(UserCreationRequest request) {
+        try {
+            if (!StringUtils.hasText(request.getRole())) {
+                request.setRole(Role.USUARIO);
+            }
+            UserDto created = userService.createUser(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
